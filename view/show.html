@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>传智播客论坛_帖子详情页</title>
+	<meta name="keywords" content="关键字列表" />
+	<meta name="description" content="网页描述" />
+	<link rel="stylesheet" type="text/css" href="<?PHP echo DIR_PUBLIC;?>/css/public.css" />
+	<link rel="stylesheet" type="text/css" href="<?PHP echo DIR_PUBLIC;?>/css/show.css" />
+	<style type="text/css"></style>
+	<script type="text/javascript"></script>
+</head>
+<body>
+	<div class="header_wrap">
+		<div id="header" class="auto">
+			<div class="logo">itcast</div>
+			<div class="nav">
+				<a class="hover">首页</a>
+			</div>
+			<div class="serarch">
+				<form>
+					<input class="keyword" type="text" name="keyword" placeholder="搜索其实很简单" />
+					<input class="submit" type="submit" name="submit" value="" />
+				</form>
+			</div>
+			<div class="login">
+				<a>登录</a>&nbsp;
+				<a>注册</a>
+			</div>
+		</div>
+	</div>
+	<div style="margin-top:55px;"></div>
+	<div id="position" class="auto">
+		 <a>首页</a> &gt; <a>NBA</a> &gt; <a>CBA</a> &gt;
+	</div>
+	<div id="main" class="auto">
+		<div class="wrap1">
+			<div class="pages">
+				<?PHP echo $pageStr;?>
+			</div>
+                    <a class="btn reply" href="./reply.php?post_id=<?PHP echo $post_id;?>"></a>
+			<div style="clear:both;"></div>
+		</div>
+                <?PHP if($pageNo==1):?>
+		<div class="wrapContent">
+			<div class="left">
+				<div class="face">
+					<a target="_blank" href="">
+                                            <img src="../uploads/images/<?PHP echo $row['user_image'];?>" />
+					</a>
+				</div>
+				<div class="name">
+					<a href=""><?PHP echo $row['post_owner'];?></a>
+				</div>
+			</div>
+			<div class="right">
+				<div class="title">
+					<h2><?PHP echo $row['post_title'];?></h2>
+					<span>阅读：<?PHP echo $row['post_hits'];?>&nbsp;|&nbsp;回复：<?PHP echo $rpl_num;?></span>
+					<div style="clear:both;"></div>
+				</div>
+				<div class="pubdate">
+					<span class="date">发布于：<?PHP echo date('Y-m-d H:i:s',$row['post_time']);?> </span>
+					<span class="floor" style="color:red;font-size:14px;font-weight:bold;">楼主</span>
+				</div>
+				<div class="content">
+					 <?PHP echo $row['post_content'];?>
+				</div>
+			</div>
+			<div style="clear:both;"></div>
+		</div>
+                <?PHP endif;?>
+                <?PHP $numth=$offset+1; while($rpl_row = mysql_fetch_assoc($rpl_result)):?>
+		<div class="wrapContent">
+			<div class="left">
+				<div class="face">
+					<a target="_blank" href="">
+						<img src="../uploads/images/<?PHP echo $rpl_row['user_image'];?>" />
+					</a>
+				</div>
+				<div class="name">
+					<a href=""><?PHP echo $rpl_row['rpl_user'];?></a>
+				</div>
+			</div>
+			<div class="right">
+				
+				<div class="pubdate">
+					<span class="date">回复时间：<?PHP echo date('Y-m-d H:i:s',$rpl_row['rpl_time']);?></span>
+                                        <span class="floor"><?PHP echo ++$numth;?>楼&nbsp;|&nbsp;<a href="./quote.php?numth=<?PHP echo $numth;?>&post_id=<?PHP echo $post_id;?>&rpl_id=<?PHP echo $rpl_row['rpl_id'];?> ">引用</a></span>
+				</div>
+                                <div class="content">
+                                    <?PHP if($rpl_row['rpl_quote_id']!=0){
+                                        $sql = "select * from reply where rpl_id = {$rpl_row['rpl_quote_id']}";
+                                        $quote_result = my_query($sql);
+                                        $quote_row = mysql_fetch_assoc($quote_result);
+                                        }
+                                    ?>
+                                    <?PHP if($rpl_row['rpl_quote_id']!=0):?>
+                                    <div class="quote">
+                                        <h2>引用 <?PHP echo $rpl_row['rpl_quote_numth'];?>楼 <?PHP echo $quote_row['rpl_user']?> 发表的: </h2>
+                                        <?PHP echo $quote_row['rpl_content']?>
+                                    </div>
+                                    <?PHP endif;?>
+                                    <?PHP echo $rpl_row['rpl_content'];?>
+                            </div>
+			</div>
+			<div style="clear:both;"></div>
+		</div>
+		<?PHP endwhile;?>
+		<div class="wrap1">
+			<div class="pages">
+                            <?PHP echo $pageStr;?>
+			</div>
+			<a class="btn reply" href="./reply.php?post_id=<?PHP echo $post_id;?>"></a>
+			<div style="clear:both;"></div>
+		</div>
+	</div>
+	<div id="footer" class="auto">
+		<div class="bottom">
+			<a>传智播客</a>
+		</div>
+		<div class="copyright">Powered by itcast ©2015 itcast.cn</div>
+	</div>
+</body>
+</html>
